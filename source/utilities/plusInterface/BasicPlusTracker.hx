@@ -17,10 +17,10 @@ class BasicPlusTracker extends FlxBasic implements PlusInterface
 	private var updateEnabled:Bool = true;
 	public var forceUpdate:Bool = false;
 	
-	public function new(source:PlusInterface)
+	public function new(parent:PlusInterface)
 	{
 		plusType = PlusEnum.BasicPlusTracker;
-		source.addItem(this);
+		parent.addItem(this);
 		super();
 	}
 	public function type():PlusEnum

@@ -21,7 +21,7 @@ class Players
 		player.ID = pID;
 		pID++;
 		members.push(player);
-		FlxG.state.add(player);
+		//FlxG.state.add(player);
 	}
 
 	public function all():Array<Player>

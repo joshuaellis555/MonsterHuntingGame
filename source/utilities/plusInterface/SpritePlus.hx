@@ -21,10 +21,10 @@ class SpritePlus extends FlxSprite implements PlusInterface
 	private var updateEnabled:Bool = true;
 	public var forceUpdate:Bool = false;
 	
-	public function new(source:PlusInterface, ?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
+	public function new(parent:PlusInterface, ?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		plusType = PlusEnum.SpritePlus;
-		source.addItem(this);
+		parent.addItem(this);
 		super(X, Y, SimpleGraphic);
 	}
 	public function type():PlusEnum

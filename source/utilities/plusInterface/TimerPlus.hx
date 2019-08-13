@@ -25,7 +25,7 @@ class TimerPlus extends BasicPlus
 		time-= elapsed;
 		if (time <= 0){
 			call(this);
-			this.destroy();
+			super.destroy();
 		}
 	}
 	override public function destroy():Void

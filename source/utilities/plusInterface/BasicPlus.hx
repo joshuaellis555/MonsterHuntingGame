@@ -19,10 +19,10 @@ class BasicPlus extends FlxBasic implements PlusInterface
 	private var updateEnabled:Bool = true;
 	public var forceUpdate:Bool = false;
 	
-	public function new(source:PlusInterface)
+	public function new(parent:PlusInterface)
 	{
 		plusType = PlusEnum.BasicPlus;
-		source.addItem(this);
+		parent.addItem(this);
 		super();
 	}
 	public function type():PlusEnum

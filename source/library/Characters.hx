@@ -22,7 +22,7 @@ class Characters
 		character.ID = cID;
 		cID++;
 		members.push(character);
-		FlxG.state.add(character);
+		//FlxG.state.add(character);
 	}
 	
 	
