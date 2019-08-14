@@ -37,7 +37,7 @@ class CounterAttack extends PlayerCard
 		resolveDelayTime = 3.0;
 		resolveDelayDamageContainer = owner.takesDamageCalls[0];
 		resolveDelayDamageTrigger = damageTrigger;
-		addItem(DelayAnimation = new Animation(this,AssetPaths.roundbreak_20__png, 0xffcccccc, 192, 192, 22, 1.0, 3));
+		addItem(delayAnimation = new Animation(this,AssetPaths.roundbreak_20__png, 0xffcccccc, 192, 192, 22, 1.0, 3));
 	}
 	override public function play()
 	{	
@@ -61,7 +61,7 @@ class CounterAttack extends PlayerCard
 		
 		//trace('damageTrigger animation');
 		resolveAnimation.play(source);
-		DelayAnimation.stop();
+		delayAnimation.stop();
 		
 		value = value / 2 - 2;
 		

@@ -48,7 +48,6 @@ class Card extends BasicPlus
 	public var stacks:Int = 0;
 	public var isStackable:Bool = false;
 	
-	private var targets:Array<Array<Character>> = [];
 	public var target:Null<Character> = null;
 	
 	private var discardActions:Array<Card->Void> = [];
@@ -58,7 +57,7 @@ class Card extends BasicPlus
 	private var resolveDelayDamageTrigger:Null<Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float> = null;
 	private var resolveDelayDamageContainer:Null<Array<Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float>> = null;
 	public var resolveDelayAnimation:Null<Animation> = null;
-	public var DelayAnimation:Null<Animation> = null;	
+	public var delayAnimation:Null<Animation> = null;	
 	
 	public function new(owner:Character, ?elements:Null<Array<DamageTypes>>=null, ?normalCard = true)
 	{
@@ -104,6 +103,7 @@ class Card extends BasicPlus
 		if (target == null) return false;
 		if (!owner.resources.remove(cost, true)) return false;
 		
+		// move into "if (windupTime <= 0.0){}" ???
 		if (windupAnimation != null) windupAnimation.play(owner);
 		
 		isResolving = true;
@@ -115,7 +115,7 @@ class Card extends BasicPlus
 		else{
 			//trace('windup');
 			owner.windupCard = this;
-			owner.statusEff.addStatus(StatusTypes.delayed, windupTime);
+			owner.statusEffects.addStatus(StatusTypes.delayed, windupTime);
 			windup = 0.0;
 		}
 		return true;
@@ -127,11 +127,10 @@ class Card extends BasicPlus
 		}
 		
 		if (resolveDelayTime > 0.0){
-			trace('windup');
 			owner.resolvingCard = this;
 			owner.windupCard = null;
 			resolveDelay = 0.0;
-			if (DelayAnimation != null) DelayAnimation.play(target);
+			if (delayAnimation != null) delayAnimation.play(target);
 			if (resolveDelayDamageTrigger != null && resolveDelayDamageContainer != null){
 				setDamageTrigger(resolveDelayDamageContainer, resolveDelayDamageTrigger);
 			}
@@ -163,7 +162,6 @@ class Card extends BasicPlus
 		target = null;
 		isResolving = false;
 		target = null;
-		targets = [];
 	}
 	public function resetCharge()
 	{

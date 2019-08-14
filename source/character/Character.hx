@@ -40,7 +40,7 @@ class Character extends Button
 	public var discard:Deck;
 	public var activeCards:Deck;
 	
-	public var statusEff:StatusEffects;
+	public var statusEffects:StatusEffects;
 	public var effects:Effects;
 	public var states:States;
 	
@@ -101,7 +101,7 @@ class Character extends Button
 		//trace("char newlevels");
 		this.stats = new Stats();
 		//trace("char newstats");
-		this.statusEff = new StatusEffects(this, this);
+		this.statusEffects = new StatusEffects(this, this);
 		//trace("char statEffects");
 		this.effects = new Effects(this);
 		//trace("char effects");
@@ -141,7 +141,7 @@ class Character extends Button
 	}
 	public function giveStatusEffect(type:StatusTypes,value:Float)
 	{
-		this.statusEff.addStatus(type, value);
+		this.statusEffects.addStatus(type, value);
 	}
 	
 	public function takesDamage(types:Array<DamageTypes>, value:Float, ?cardType:Null<CardType> = null, ?source:Null<Character> = null):Float
@@ -160,8 +160,8 @@ class Character extends Button
 		//trace('resistances',f);
 		f = stats.takesDamage(types, f, cardType, source);
 		//trace('stats',f);
-		f = statusEff.takesDamage(types, f, cardType, source);
-		//trace('statusEff',f);
+		f = statusEffects.takesDamage(types, f, cardType, source);
+		//trace('statusEffects',f);
 		f = Math.max(f, 1);
 		f = effects.takesDamage2(types, f, cardType, source);
 		//trace('effects',f);
@@ -191,8 +191,8 @@ class Character extends Button
 		for (fun in doesDamageCalls[0]) f = fun(types, f, cardType, source);
 		
 		//trace('DoDmg','f', f, 'types', types);
-		f = statusEff.doesDamage(types, f, cardType, source);
-		//trace('statusEff',f);
+		f = statusEffects.doesDamage(types, f, cardType, source);
+		//trace('statusEffects',f);
 		f = stats.doesDamage(types, f, cardType, source);
 		//trace('stats',f);
 		f = damageBonus.doesDamage(types, f, cardType, source);
@@ -259,7 +259,7 @@ class Character extends Button
 	
 	override public function update(elapsed:Float):Void
 	{
-		if (statusEff.get(StatusTypes.delayed) > 0){
+		if (statusEffects.get(StatusTypes.delayed) > 0){
 			setUpdate(false);
 		}else{
 			setUpdate(true);

@@ -154,7 +154,7 @@ class PlayerCharacter extends Character
 	override public function update(elapsed:Float)
 	{
 		if (this.alive){
-			if (statusEff.get(StatusTypes.delayed) > 0){
+			if (statusEffects.get(StatusTypes.delayed) > 0){
 				owner.setUpdate(false);
 				owner.makeInvisible();
 			}else{

@@ -112,8 +112,12 @@ class StatusEffects extends BasicPlus
 			if (statusMap[StatusTypes.hot] <= 0.0) statusMap[StatusTypes.hot] = 0.1;
 			if (statusMap[StatusTypes.cold] <= 0.0) statusMap[StatusTypes.cold] = 0.1;
 		}
-		if (statusMap[StatusTypes.wet] > 0.0 && statusMap[StatusTypes.hot] > 0.0){
-			statusMap[StatusTypes.wet] -= elapsed;
+		if (statusMap[StatusTypes.wet] > 0.0){
+			if (statusMap[StatusTypes.hot] > 0.0){
+				statusMap[StatusTypes.wet] -= elapsed;
+				statusMap[StatusTypes.hot] -= elapsed;
+			}
+			if (statusMap[StatusTypes.cold] > 0.1) statusMap[StatusTypes.cold] += elapsed / 2;
 			if (statusMap[StatusTypes.wet] <= 0.0) statusMap[StatusTypes.wet] = 0.1;
 		}
 		
@@ -127,6 +131,7 @@ class StatusEffects extends BasicPlus
 		else
 			statsMods.setDefault(StatsEnum.speed, 0);
 			
+		/*
 		if (statusMap[StatusTypes.rage] > 0.0){
 			statsMods.setDefault(StatsEnum.bonusDmg, 0.5);
 			statsMods.setDefault(StatsEnum.dmgResistance, -0.5);
@@ -134,6 +139,7 @@ class StatusEffects extends BasicPlus
 			statsMods.setDefault(StatsEnum.bonusDmg, 0);
 			statsMods.setDefault(StatsEnum.dmgResistance, 0);
 		}
+		//*/
 		
 		for (key in Type.allEnums(StatusTypes)){
 			if (statusMap[key]  > 0.0){
@@ -215,10 +221,16 @@ class StatusEffects extends BasicPlus
 				if (type == DamageTypes.fire){
 					value /= 1 + 1 / 3 / types.length;
 				}
+				if (type == DamageTypes.cold){
+					value *= 1 + 1 / 2 / types.length;
+				}
 			}
 			if (statusMap[StatusTypes.hot] > 0.0){
 				if (type == DamageTypes.cold){
 					value /= 1 + 1 / 3 / types.length;
+				}
+				if (type == DamageTypes.fire){
+					value *= 1 + 1 / 2 / types.length;
 				}
 			}
 			if (statusMap[StatusTypes.rage] > 0.0){

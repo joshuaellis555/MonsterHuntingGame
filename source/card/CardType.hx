@@ -6,70 +6,92 @@ package card;
  */
 class CardType 
 {
-	private var Bmelee:Bool = false;
-	private var Branged:Bool = false;
-	private var Bspell:Bool = false;
-	private var Bmagic:Bool = false;
-	private var Bpiercing:Float = 0.0;
-	private var BtrueDamage:Bool = false;
-	private var Bcharge:Bool = false;
-	private var BpositiveEffect:Bool = false;
-	private var Bfinesse:Bool = false;
-	private var BeffectsLiving:Bool = true;
-	private var BeffectsDead:Bool = false;
+	private var _melee:Bool = false;
+	private var _ranged:Bool = false;
+	private var _spell:Bool = false;
+	private var _magic:Bool = false;
+	private var _piercing:Float = 0.0;
+	private var _trueDamage:Bool = false;
+	private var _charge:Bool = false;
+	private var _positiveEffect:Bool = false;
+	private var _finesse:Bool = false;
+	private var _effectsLiving:Bool = true;
+	private var _effectsDead:Bool = false;
 	
 	
 	public function new(){}
 	
 	public function melee(?value:Null<Bool> = null):Bool{
-		if (value != null) Bmelee = value;
-		if (value == true) Branged = false;
-		return Bmelee;
+		if (value == null) return _melee;
+		
+		_melee = value;
+		if (value == true) _ranged = false;
+		return _melee;
 	}
 	public function ranged(?value:Null<Bool> = null):Bool{
-		if (value != null) Branged = value;
-		if (value == true) Bmelee = false;
-		return Branged;
+		if (value == null) return _ranged;
+		
+		_ranged = value;
+		if (value == true) _melee = false;
+		return _ranged;
 	}
 	public function spell(?value:Null<Bool> = null):Bool{
-		if (value != null) Bspell = value;
+		if (value == null) return _spell;
+		
+		_spell = value;
 		if (value == true){
-			Bmagic = true;
+			_magic = true;
 			ranged(true);
 		}
-		return Bspell;
+		return _spell;
 	}
 	public function magic(?value:Null<Bool> = null):Bool{
-		if (value != null) Bmagic = value;
-		if (value == false) Bspell = false;
-		return Bmagic;
+		if (value == null) return _magic;
+		
+		_magic = value;
+		if (value == false) _spell = false;
+		return _magic;
 	}
 	public function piercing(?value:Null<Float> = null):Float{
-		if (value != null) Bpiercing = Math.max(0.0, Math.min(1.0, value));
-		return Bpiercing;
+		if (value == null) return _piercing;
+		
+		_piercing = Math.max(0.0, Math.min(1.0, value));
+		return _piercing;
 	}
 	public function trueDamage(?value:Null<Bool> = null):Bool{
-		if (value != null) BtrueDamage = value;
-		return BtrueDamage;
+		if (value == null) return _trueDamage;
+		
+		_trueDamage = value;
+		return _trueDamage;
 	}
 	public function charge(?value:Null<Bool> = null):Bool{
-		if (value != null) Bcharge = value;
-		return Bcharge;
+		if (value == null) return _charge;
+		
+		_charge = value;
+		return _charge;
 	}
 	public function positiveEffect(?value:Null<Bool> = null):Bool{
-		if (value != null) BpositiveEffect = value;
-		return BpositiveEffect;
+		if (value == null) return _positiveEffect;
+		
+		_positiveEffect = value;
+		return _positiveEffect;
 	}
 	public function finesse(?value:Null<Bool> = null):Bool{
-		if (value != null) Bfinesse = value;
-		return Bfinesse;
+		if (value == null) return _finesse;
+		
+		_finesse = value;
+		return _finesse;
 	}
 	public function effectsLiving(?value:Null<Bool> = null):Bool{
-		if (value != null) BeffectsLiving = value;
-		return BeffectsLiving;
+		if (value == null) return _effectsLiving;
+		
+		_effectsLiving = value;
+		return _effectsLiving;
 	}
 	public function effectsDead(?value:Null<Bool> = null):Bool{
-		if (value != null) BeffectsDead = value;
-		return BeffectsDead;
+		if (value == null) return _effectsDead;
+		
+		_effectsDead = value;
+		return _effectsDead;
 	}
 }

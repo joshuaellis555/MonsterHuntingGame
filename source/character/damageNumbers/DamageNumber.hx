@@ -46,8 +46,8 @@ class DamageNumber extends BasicPlus
 			return;
 		else
 			text.visible = true;
-		text.x = x - Math.cos(life/timeThisTakes*1.57)*30+10;
-		text.y = y - Math.sin(life/timeThisTakes*1.57)*30;
+		text.x = x - Math.cos(life / timeThisTakes * 1.57) * 30 + 10;
+		text.y = y - Math.sin(life / timeThisTakes * 1.57) * 30;
 		if (life > timeThisTakes){
 			super.destroy();
 			text.destroy();
