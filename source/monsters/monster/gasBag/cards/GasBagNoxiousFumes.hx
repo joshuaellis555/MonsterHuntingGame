@@ -8,7 +8,6 @@ import monsters.MonsterCharacter;
 import library.ElementalResistances;
 import utilities.event.Event;
 import player.Player;
-import character.resources.Health;
 import character.resources.Resources;
 import character.resources.ResourceTypes;
 import character.damage.DamageTypes;

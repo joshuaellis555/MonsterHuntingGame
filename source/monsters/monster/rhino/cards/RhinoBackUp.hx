@@ -9,7 +9,6 @@ import player.PlayerCharacter;
 import utilities.event.Event;
 import monsters.MonsterCharacter;
 import player.Player;
-import character.resources.Health;
 import character.resources.Resources;
 import character.resources.ResourceTypes;
 import character.damage.DamageTypes;

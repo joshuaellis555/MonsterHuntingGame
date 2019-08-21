@@ -29,26 +29,25 @@ import library.Library;
  * ...
  * @author ...
  */
-class Player extends SpritePlus implements Observer
+class Player extends SpritePlus
 {
-	public var cursorMode:Int = 0;
+	public var cursorMode:Int = 0; //direction and position of cursor
 	
-	private var target:Null<Button> = null;
+	private var target:Null<Button> = null; //the thing the cursor is targeting
 	
-	public var menu:Null<BattleMenu>=null;
+	public var menu:Null<BattleMenu>=null; //the player's BattleMenu
 	
-	public var selection:Null<Selection>=null;
+	public var selection:Null<Selection>=null; //the selection of Buttons that the player can select from
 	
-	public var character:Null<PlayerCharacter>=null;
+	public var character:Null<PlayerCharacter>=null; //the player's character
 	
-	public var controller:Null<Controller> = null;
+	public var controller:Controller; //the player's controller
 	
-	public static var god:Bool = false;
-	
-	public function new(source:StatePlus,?color:FlxColor=FlxColor.GREEN, ?controller:Null<Controller> = null)
+	public function new(source:StatePlus,color:FlxColor, controller:Controller)
 	{
 		super(source, 0, 0);
 		
+		// load the graphic for the player's cursor
 		this.loadGraphic(AssetPaths.CursorArr__png, true, 401, 401);
 		this.scale = new FlxPoint(1 / 8, 1 / 8);
 		this.offset = new FlxPoint(this.width/2, this.height/2);
@@ -62,38 +61,48 @@ class Player extends SpritePlus implements Observer
 		x = 1920 / 2;
 		y = 1080 / 2;
 		
+		// add player to the players group
 		Library.players.add(this);
 		
 		this.controller = controller;
-		
-		//trace("player done");
-		
 	}
 	
-	public function cardFinished(card:PlayerCard)
+	public function cardFinished()
 	{
-		//trace("discard", card.getName());
-		character.discardCard(card);
-		selection.setIndex(0);
+		selection.boundIndex(); //for safety
+		//move cursor to a non redraw card
+		var redraws:Int = 0;
+		for (i in 0...character.activeCards.length){
+			if (character.activeCards.knownCards[i].name == "-")
+				redraws += 1;
+		}
+		if (selection.getIndex() > character.activeCards.length - redraws - 1)
+			selection.setIndex(character.activeCards.length - redraws - 1);
+		//move cursor and set focus
 		resetFocus();
 	}
 	
 	public function _setFocus(target:Button)
 	{
+		//if this was already focussed, let old target know it no longer has focus from this
 		if (this.target != null){
 			this.target.unfocus(this);
 		}
+		//focus on target
 		this.target = target;
 	}
 	public function setFocus(target:Button)
 	{
+		//let the target know it has the focus of this
 		target.focus(this);
 	}
 	public function resetFocus()
 	{
+		//moves cursor after selection changes
 		setFocus(selection.getButtons()[selection.getIndex()]);
 	}
 	
+	//get and set character
 	public function setCharacter(character:PlayerCharacter)
 	{
 		this.character = character;
@@ -105,11 +114,10 @@ class Player extends SpritePlus implements Observer
 	
 	public function setMenu(menu:BattleMenu)
 	{
-		//trace("menu");
+		//trace set the player's menu and get base selection from menu
 		this.menu = menu;
 		menu.setOwner(this);
 		selection = menu.selection;
-		//trace('finish setMenu');
 	}
 	
 	public function makeVisible()
@@ -123,30 +131,8 @@ class Player extends SpritePlus implements Observer
 	
 	override public function update(elapsed:Float):Void 
     {
-		//trace(elapsed);
+		//update cursor 
 		animation.play(Std.string(cursorMode));
         super.update(elapsed);
     }
-	public function onNotify(event:Event):Void 
-	{
-		switch(event.eventType){
-			case Mouse:{
-				var m:MouseEvent = cast event;
-				for (mouseEvent in m.mouseEvents)
-				{
-					switch(mouseEvent)
-					{
-						case LeftJustReleased:{
-						}
-						case MouseOver:{
-						}
-						case MouseOff:{
-						}
-						default:null;
-					}
-				}
-			}
-			default:null;
-		}
-	}
 }

@@ -39,12 +39,11 @@ class PlayerCharacter extends Character
 	}
 	override public function discardCard(card:Card)
 	{
-		var playerCard:PlayerCard = cast card;
-		var i:Int = activeCards.knownCards.indexOf(playerCard);
-		if (i >= 0){
-			discard.push(playerCard);
-			activeCards.knownCards[i] = new Redraw(this);
-			owner.menu.buttons[i].card = cast activeCards.knownCards[i];
+		if (activeCards.knownCards.remove(card)){
+			discard.push(card);
+			activeCards.push(new Redraw(this));
+		}else{
+			trace('CARD NOT FOUND!!!!!!!!!', card.name);
 		}
 	}
 	override public function drawCard():Bool
@@ -58,8 +57,11 @@ class PlayerCharacter extends Character
 		var i:Int = activeCards.knownCards.indexOf(redraw);
 		if (i >= 0){
 			activeCards.knownCards[i] = discard.pop();
+			trace(i, owner.menu.buttons.length);
 			owner.menu.buttons[i].card = cast activeCards.knownCards[i];
 			activeCards.knownCards[i].enabled = true;
+		}else{
+			trace("REDRAW NOT FOUND!!!!!!!");
 		}
 		return true;
 	}
@@ -165,11 +167,11 @@ class PlayerCharacter extends Character
 			if (owner.menu != null){
 				for (i in 0...handSize()){
 					//trace("i",i);
-					if (owner.menu.buttons[i].card == null){
+					if (i >= activeCards.length){
 						//trace("null");
 						var c:PlayerCard = new Redraw(this);
 						activeCards.push(c);
-						owner.menu.buttons[i].card = c;
+						owner.menu.buttons[i].card = cast c;
 					}
 				}for (i in handSize()...8){
 					//trace("J", i);

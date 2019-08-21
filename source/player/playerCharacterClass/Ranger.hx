@@ -45,6 +45,7 @@ class Ranger extends PlayerCharacter
 		addCard(new PoisonKnife(this));
 		addCard(new LightGuard(this));
 		addCard(new Attack(this));
+		addCard(new ActionSurge(this));
 		addCard(new player.playerCards.green.QuickAttack(this));
 		addCard(new Rest(this));
 		

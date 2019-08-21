@@ -107,12 +107,16 @@ class PlayerCard extends Card
 		player.selection.popSubSelection();
 		player.resetFocus();
 	}
+	override public function resolve()
+	{
+		player.character.resetCardTimers(family);
+		super.resolve();
+	}
 	override public function finish()
 	{
 		super.finish();
-		player.character.resetCardTimers(family);
 		player.selection.popSubSelection();
-		player.cardFinished(this);
+		player.cardFinished();
 	}
 	override public function resetCard()
 	{

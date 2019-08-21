@@ -162,17 +162,17 @@ class Character extends Button
 		//trace('stats',f);
 		f = statusEffects.takesDamage(types, f, cardType, source);
 		//trace('statusEffects',f);
-		f = Math.max(f, 1);
 		f = effects.takesDamage2(types, f, cardType, source);
 		//trace('effects',f);
 		
 		for (fun in takesDamageCalls[1]) f = fun(types, f, cardType, source);
 		
+		f = Math.round(Math.max(f, 0));
+		
 		trace("takeDamage", f);
 		resources.removeResource(ResourceTypes.health, f);
 		trace("health", resources.get(ResourceTypes.health));
 		
-		if (f < 1 && f>0) f = 1;
 		if (f <= 0.0)
 			damageNumbers.addNumber("Block", Library.damageColors.get(types[0]));
 		else

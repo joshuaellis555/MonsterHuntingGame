@@ -1,4 +1,5 @@
 package player.menu;
+import card.Card;
 import utilities.button.Button;
 import utilities.camera.Camera;
 import flixel.math.FlxRect;
@@ -57,7 +58,7 @@ class BattleMenu extends SpritePlus
 	
 	private var guardText:FlxText;
 	
-	
+	private var handSize:Int = 8;
 	
 	public function new(owner:Player, position:Float)
 	{
@@ -148,6 +149,7 @@ class BattleMenu extends SpritePlus
 	{
 		//trace("updateSelection");
 		var index:Int = selection.getIndex();
+		handSize = owner.character.handSize();
 		var b:Array<Button> = [for (i in 0...owner.character.handSize()) buttons[i]];
 		//trace(b.length);
 		selection = new Selection([cast b], previous, next, null, null, ok, esc,discard);
@@ -183,9 +185,15 @@ class BattleMenu extends SpritePlus
 	{
 		super.update(elapsed);
 		
+		if (owner == null) return;
+		if (owner.character == null) return;
+		
 		healthBar.set_clipRect(new FlxRect(0, 0, Std.int(Math.max(1, owner.character.resources.get(ResourceTypes.health) / Math.max(1, owner.character.resources.getCap(ResourceTypes.health)) * healthBar.width)), 15));
 		staminaBar.set_clipRect(new FlxRect(0, 0, Std.int(Math.max(1, owner.character.resources.get(ResourceTypes.stamina) / Math.max(1, owner.character.resources.getCap(ResourceTypes.stamina)) * staminaBar.width)), 15));
 		manaBar.set_clipRect(new FlxRect(0, 0, Std.int(Math.max(1, owner.character.resources.get(ResourceTypes.mana) / Math.max(1, owner.character.resources.getCap(ResourceTypes.mana)) * manaBar.width)), 15));
+		
+		for (i in 0...handSize)
+			buttons[i].card = cast owner.character.activeCards.knownCards[i];
 		
 		guardText.text = Std.string(owner.character.effects.maxGuard());
 	}

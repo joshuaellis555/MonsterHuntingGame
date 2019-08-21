@@ -7,7 +7,6 @@ import character.Character;
 import player.PlayerCharacter;
 import utilities.event.Event;
 import player.Player;
-import character.resources.Health;
 import character.resources.Resources;
 import character.resources.ResourceTypes;
 import character.damage.DamageTypes;
@@ -37,7 +36,7 @@ class CounterAttack extends PlayerCard
 		resolveDelayTime = 3.0;
 		resolveDelayDamageContainer = owner.takesDamageCalls[0];
 		resolveDelayDamageTrigger = damageTrigger;
-		addItem(delayAnimation = new Animation(this,AssetPaths.roundbreak_20__png, 0xffcccccc, 192, 192, 22, 1.0, 3));
+		addItem(delayAnimation = new Animation(this, AssetPaths.roundbreak_20__png, 0xffcccccc, 192, 192, 22, 1.0, 3));
 	}
 	override public function play()
 	{	

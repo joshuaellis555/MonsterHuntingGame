@@ -71,7 +71,6 @@ class Selection
 					if (esc != null) esc();
 				}
 				case SelectionActions.Y:{
-					trace(Y);
 					if (Y != null) Y();
 				}
 				case SelectionActions.UpLeft:{
@@ -150,6 +149,22 @@ class Selection
 			return subSelection.getIndex();
 		}
 	}
+	public function boundIndex()
+	{
+		if (subSelection == null){
+			if (currentSliceIndex > buttons.length -1)
+				currentSliceIndex = buttons.length -1;
+			if (currentSliceIndex < 0)
+				currentSliceIndex = 0;
+			if (index > buttons[currentSliceIndex].length -1)
+				index = buttons[currentSliceIndex].length -1;
+			if (index < 0)
+				index = 0;
+		}
+		else{
+			subSelection.boundIndex();
+		}
+	}
 	public function setIndex(i:Int)
 	{
 		if (subSelection == null){
@@ -163,6 +178,7 @@ class Selection
 			}
 			index = i;
 			currentSliceIndex = c;
+			boundIndex();
 		}
 		else{
 			subSelection.setIndex(i);

@@ -6,7 +6,6 @@ import card.CardFamily;
 import player.PlayerCharacter;
 import utilities.event.Event;
 import player.Player;
-import character.resources.Health;
 import character.resources.Resources;
 import character.resources.ResourceTypes;
 

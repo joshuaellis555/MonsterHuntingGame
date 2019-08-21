@@ -11,20 +11,20 @@ import utilities.plusInterface.SpritePlusTracker;
  */
 class DamageNumbers extends BasicPlusTracker
 {
-	private var timeFromLast:Float = 0.0;
+	private var timeFromLast:Float = 0.0; //tracks delay for queuing up damage numbers so they dont get shown all at once
 	
-	private var owner:Character;
+	private var owner:Character; //character the numbers apear over
 	
 	public function new(owner:Character) 
 	{
 		super(owner);
 		this.owner = owner;
-		forceUpdate = true;
+		forceUpdate = true; //make sure damage numbers continue to update when ower is delayed
 	}
 	public function addNumber(number:String, color:FlxColor)
 	{
 		//trace(number);
-		addItem(new DamageNumber(this, owner.x + 60, owner.y - 30, color, number, timeFromLast));
+		addItem(new DamageNumber(this, owner.x + 60, owner.y - 30, color, number, timeFromLast)); //create new damage number
 		timeFromLast += 0.3;
 	}
 	override public function update(elapsed:Float)

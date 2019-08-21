@@ -23,70 +23,69 @@ import library.Library;
  */
 class Card extends BasicPlus
 {
-	public var owner:Character;
+	public var owner:Character; //character who owns the card
 	
-	public var enabled:Bool = false;
+	public var enabled:Bool = false; //cards ara disabled when in the discard
 	
-	public var name:String = "";
-	public var cost:Resources;
-	public var family:CardFamily;
-	public var cardType:CardType;
-	public var elements:Array<DamageTypes>=[];
-	public var resistances:Resistances;
+	public var name:String = ""; //name of the card
+	public var cost:Resources; //resource cost of the card
+	public var family:CardFamily; //cards family (color)
+	public var cardType:CardType; //is the card melee, ranged, magic, etc...
+	public var elements:Array<DamageTypes>=[]; //array of elements of the card (damageTypes)
+	public var resistances:Resistances; //damage resistances based on elements
 	
-	public var charge:Float = 0.0;
-	public var chargeTime:Float = 0.0;
-	public var isCharged:Bool = false;
+	public var charge:Float = 0.0; //how long the card has been charging
+	public var chargeTime:Float = 0.0; //how long it takes the card to charge
+	public var isCharged:Bool = false; //if it is charged
 	
-	public var isResolving:Bool = false;
+	public var isResolving:Bool = false; //if the card is resolving (used by monsters)
 	
-	public var windup:Float = -1.0;
-	public var windupTime:Float = 0.0;
-	public var windupAnimation:Null<Animation> = null;
-	public var resolveAnimation:Null<Animation> = null;
+	public var windup:Float = -1.0; //how long the windup phase has been going. <0 = disabled
+	public var windupTime:Float = 0.0; //how long the windup takes
+	public var windupAnimation:Null<Animation> = null; //animation played during windup
+	public var resolveAnimation:Null<Animation> = null; //resolve animation
 	
-	public var stacks:Int = 0;
-	public var isStackable:Bool = false;
+	public var stacks:Int = 0; //some cards can charge up multiple stacks if it is allowed to charge longer
+	public var isStackable:Bool = false; //if card is stackable
 	
-	public var target:Null<Character> = null;
+	public var target:Null<Character> = null; //card's target. Gets set in PlayerCard and MonsterCard
 	
-	private var discardActions:Array<Card->Void> = [];
+	private var discardActions:Array<Card->Void> = []; //array of functions to resolve during discard. Not used, may be removed
 	
-	private var resolveDelay:Float = -1.0;
-	private var resolveDelayTime:Float = 0.0;
-	private var resolveDelayDamageTrigger:Null<Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float> = null;
-	private var resolveDelayDamageContainer:Null<Array<Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float>> = null;
-	public var resolveDelayAnimation:Null<Animation> = null;
-	public var delayAnimation:Null<Animation> = null;	
+	private var resolveDelay:Float = -1.0; //how long the delayed resolve phase has been going. <0 = disabled
+	private var resolveDelayTime:Float = 0.0; //how long the delayed resolve phase lasts
+	private var resolveDelayDamageTrigger:Null<Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float> = null; //damage trigger for resolved delay
+	private var resolveDelayDamageContainer:Null<Array<Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float>> = null; //the container for the resolved delay damage trigger
+	public var resolveDelayAnimation:Null<Animation> = null; //animation played on resolve after delayed resolve
+	public var delayAnimation:Null<Animation> = null; //animation played during delayed resolve
 	
 	public function new(owner:Character, ?elements:Null<Array<DamageTypes>>=null, ?normalCard = true)
 	{
 		//trace('new');
 		super(owner);
 		
-		//owner.addItem(this);
+		//owner.addItem(this); //cards are added by plusInterface
 		
 		this.owner = owner;
 		if (elements!=null)
-			this.elements = elements;
-		if (normalCard){
-			Library.cardOverseer.add(this);
-			resistances = new Resistances();
+			this.elements = elements; //set elements
+		if (normalCard){ //unplayable cards such as redraw have normalCard=False
+			Library.cardOverseer.add(this); //add card to card overseer (also gives card unique id)
+			resistances = new Resistances(); //build resistances
 			for (i in 0...this.elements.length)
 				resistances.add(i, Library.elementalResistances.get(this.elements[i]).retMultiply(1 / this.elements.length));
-			owner.resistances.add(ID, resistances);
-			
+			owner.resistances.add(ID, resistances); //set resistances
 		}
 		
-		cardType = new CardType();
+		cardType = new CardType(); //initialize card type
 	}
-	public function play(){}
-	public function fizzle()
+	public function play(){} //logic handled by PlayerCard and MonsterCard
+	public function fizzle() //card has been countered during windup. Causes it to reset and discard without resolving
 	{
 		finish();
 		if (windupAnimation != null) windupAnimation.stop();
 	}
-	public function finish()
+	public function finish() //
 	{
 		trace('finish');
 		if (resolveDelayDamageTrigger != null && resolveDelayDamageContainer != null){
@@ -100,58 +99,57 @@ class Card extends BasicPlus
 	public function beginResolution():Bool
 	{
 		trace('Card beginResolution', target);
-		if (target == null) return false;
-		if (!owner.resources.remove(cost, true)) return false;
+		if (target == null) return false; //resolve failed because no target
+		if (!owner.resources.remove(cost, true)) return false; //resolve failed because owner doesn't have resources
 		
-		// move into "if (windupTime <= 0.0){}" ???
+		//todo: move into "if (windupTime <= 0.0){}" ???
 		if (windupAnimation != null) windupAnimation.play(owner);
 		
 		isResolving = true;
 		
-		if (windupTime <= 0.0){
+		if (windupTime <= 0.0){ //resolve if no windup phase
 			//trace('no windup');
 			resolve();
 		}
-		else{
+		else{ //begin windup phase
 			//trace('windup');
 			owner.windupCard = this;
-			owner.statusEffects.addStatus(StatusTypes.delayed, windupTime);
+			owner.statusEffects.addStatus(StatusTypes.delayed, windupTime); //delay owner for duration of windup
 			windup = 0.0;
 		}
-		return true;
+		return true; //successfully begain resolution
 	}
-	public function resolve()
+	public function resolve() //resolve card
 	{
 		if (enabled == false){
 			return; //check if spell has been countered
 		}
 		
-		if (resolveDelayTime > 0.0){
+		if (resolveDelayTime > 0.0){ // if card uses delayed resolve phase
 			owner.resolvingCard = this;
 			owner.windupCard = null;
 			resolveDelay = 0.0;
-			if (delayAnimation != null) delayAnimation.play(target);
-			if (resolveDelayDamageTrigger != null && resolveDelayDamageContainer != null){
-				setDamageTrigger(resolveDelayDamageContainer, resolveDelayDamageTrigger);
+			if (delayAnimation != null) delayAnimation.play(target); //play delayAnimation on target
+			if (resolveDelayDamageTrigger != null && resolveDelayDamageContainer != null){ //if damage trigger is not set (for safety)
+				setDamageTrigger(resolveDelayDamageContainer, resolveDelayDamageTrigger); //set damage triggers
 			}
-			return;
 		}else{
-			if (resolveAnimation != null) resolveAnimation.play(target);
-			finish();
+			if (resolveAnimation != null) resolveAnimation.play(target); //play resolveAnimation
+			finish(); //finish card
 		}
 	}
-	public function delayedResolve()
+	public function delayedResolve() //resolve after delayed resolve phase
 	{
 		if (resolveDelayAnimation != null) resolveDelayAnimation.play(target);
 		finish();
 	}
-	public function discard()
+	public function discard() //discard the card
 	{
 		for (dis in discardActions) dis(this);
 		owner.discardCard(this);
 		resetCard();
 	}
-	public function charged() {}
+	public function charged() {} //placeholder for if the card has any special actions that occure when its charged
 	public function resetCard()
 	{
 		enabled = false;
@@ -197,13 +195,13 @@ class Card extends BasicPlus
 	}
 	
 	private function setDamageTrigger(container:Array<Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float>
-		, trigger:Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float)
+		, trigger:Array<DamageTypes>->Float->Null<CardType>->Null<Character>->Float) //set the damage triggers
 	{
 		//trace('setDamageTrigger');
-		resolveDelayDamageTrigger = trigger;
-		resolveDelayDamageContainer = container;
+		resolveDelayDamageTrigger = trigger; //set trigger
+		resolveDelayDamageContainer = container; //set trigger's container
 		if (resolveDelayDamageContainer.indexOf(trigger) == -1)
-			resolveDelayDamageContainer.push(trigger);
+			resolveDelayDamageContainer.push(trigger); //push trigger to container if it isn't there already (it shouldn't be, this is for safety)
 	}
 	
 	//TODO public function remove
@@ -213,11 +211,11 @@ class Card extends BasicPlus
 		super.plusUpdate(elapsed);
 		if (enabled){
 			charge = Math.min(elapsed + charge, chargeTime);
-			if (!isCharged && chargeTime == charge){
+			if (!isCharged && chargeTime == charge){ //card is charged
 				isCharged = true;
 				charged();
 			}
-			if (isStackable && chargeTime == charge){
+			if (isStackable && chargeTime == charge){ //add a stack to the card
 				stacks++;
 				charge = 0;
 			}
@@ -225,7 +223,7 @@ class Card extends BasicPlus
 	}
 	override public function update(elapsed:Float):Void
 	{
-		super.update(elapsed);
+		super.update(elapsed); //windup and resolvedDelay will happen even if owner is delayed
 		if (windup >= 0.0){
 			windup += elapsed;
 			if (windup >= windupTime) resolve();
@@ -237,7 +235,7 @@ class Card extends BasicPlus
 	}
 	override public function destroy():Void 
 	{
-		Library.cardOverseer.remove(this);
+		Library.cardOverseer.remove(this); //remove self from overseer
 		super.destroy();
 	}
 }

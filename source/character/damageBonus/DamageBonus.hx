@@ -9,22 +9,24 @@ import character.damage.DamageTypes;
  */
 class DamageBonus
 {
-	private var bonusMap:Map<DamageTypes,Int>;
-	private var bonusSets:Map<Int,Map<DamageTypes,Int>>;
+	private var bonusMap:Map<DamageTypes,Int>; //Sum of bonusSets and defaultMap
 	
-	private var defaultMap:Map<DamageTypes,Int>;
+	private var bonusSets:Map<Int,Map<DamageTypes,Int>>; //Added values from other sources
+	
+	private var defaultMap:Map<DamageTypes,Int>; //values inherent to this istance
 	
 	public function new(?bonuses:Null<Array<Int>>=null)
 	{
 		bonusMap = new Map<DamageTypes, Int>();
 		bonusSets = new Map<Int,Map<DamageTypes,Int>>();
 		defaultMap = new Map<DamageTypes, Int>();
-		if (bonuses==null){
+		
+		if (bonuses==null){ //if no values supplied, set all to 0
 			for (key in Type.allEnums(DamageTypes)){
 				bonusMap[key] = 0;
 				defaultMap[key] = 0;
 			}
-		}else{
+		}else{ //otherwise set defaultMap to bonuses
 			var i:Int = 0;
 			for (key in Type.allEnums(DamageTypes)){
 				if (i < bonuses.length){
@@ -38,34 +40,34 @@ class DamageBonus
 			}
 		}
 	}
-	public function setDefault(type:DamageTypes, value:Int)
+	public function setDefault(type:DamageTypes, value:Int) //change default value
 	{
 		//trace('setDefault');
 		bonusMap[type] += value - defaultMap[type];
 		defaultMap[type] = value;
 	}
-	public function add(sourceID:Int, bonuses:DamageBonus)
+	public function add(sourceID:Int, bonuses:DamageBonus) //add full set of bonuses from external source
 	{
 		if (bonusSets.exists(sourceID)) return;
 		bonusSets[sourceID] = bonuses.getMap();
 		for (key in Type.allEnums(DamageTypes))
 			bonusMap[key] += bonusSets[sourceID][key];
 	}
-	public function remove(sourceID:Int)
+	public function remove(sourceID:Int) //remove set of bonuses
 	{
 		for (key in Type.allEnums(DamageTypes))
 			bonusMap[key] -= bonusSets[sourceID][key];
 		bonusSets.remove(sourceID);
 	}
-	public function getMap():Map<DamageTypes,Int>
+	public function getMap():Map<DamageTypes,Int> //get the map of damage bonuses
 	{
 		return bonusMap;
 	}
-	public function get(key:DamageTypes):Int
+	public function get(key:DamageTypes):Int //get a specific value by key
 	{
 		return bonusMap[key];
 	}
-	public function retMultiply(multiplyer:Float):DamageBonus
+	public function retMultiply(multiplyer:Float):DamageBonus //return a copy of this where each value is multiplied by multiplyer
 	{
 		var c:DamageBonus = this.copy();
 		for (key in Type.allEnums(DamageTypes))
@@ -74,14 +76,14 @@ class DamageBonus
 		}
 		return c;
 	}
-	public function copy():DamageBonus
+	public function copy():DamageBonus //return a copy of this
 	{
 		var c:DamageBonus = new DamageBonus();
 		for (key in Type.allEnums(DamageTypes))
 			c.setDefault(key, bonusMap[key]);
 		return c;
 	}
-	public function doesDamage(types:Array<DamageTypes>, value:Float, ?cardType:Null<CardType> = null, ?source:Null<Character> = null):Float
+	public function doesDamage(types:Array<DamageTypes>, value:Float, ?cardType:Null<CardType> = null, ?source:Null<Character> = null):Float //called when a character does damage
 	{
 		//trace(value);
 		for (type in Type.allEnums(DamageTypes)){

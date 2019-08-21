@@ -8,22 +8,24 @@ import character.damage.DamageTypes;
  */
 class Resistances 
 {
-	private var resistanceMap:Map<DamageTypes,Int>;
-	private var resistanceSets:Map<Int,Map<DamageTypes,Int>>;
+	private var resistanceMap:Map<DamageTypes,Int>; //Sum of resistanceSets and defaultMap
 	
-	private var defaultMap:Map<DamageTypes,Int>;
+	private var resistanceSets:Map<Int,Map<DamageTypes,Int>>; //Added values from other sources
+	
+	private var defaultMap:Map<DamageTypes,Int>; //values inherent to this istance
 	
 	public function new(?resistances:Null<Array<Int>>=null)
 	{
 		resistanceMap = new Map<DamageTypes, Int>();
 		resistanceSets = new Map<Int,Map<DamageTypes,Int>>();
 		defaultMap = new Map<DamageTypes, Int>();
-		if (resistances==null){
+		
+		if (resistances==null){ //if no values supplied, set all to 0
 			for (key in Type.allEnums(DamageTypes)){
 				resistanceMap[key] = 0;
 				defaultMap[key] = 0;
 			}
-		}else{
+		}else{ //otherwise set defaultMap to resistances
 			var i:Int = 0;
 			for (key in Type.allEnums(DamageTypes)){
 				if (i < resistances.length){
@@ -37,13 +39,13 @@ class Resistances
 			}
 		}
 	}
-	public function setDefault(type:DamageTypes, value:Int)
+	public function setDefault(type:DamageTypes, value:Int) //change default value
 	{
 		//trace('setDefault');
 		resistanceMap[type] += value - defaultMap[type];
 		defaultMap[type] = value;
 	}
-	public function add(sourceID:Int, resistances:Resistances)
+	public function add(sourceID:Int, resistances:Resistances) //add full set of resistances from external source
 	{
 		//trace('add',sourceID);
 		if (resistanceSets.exists(sourceID)) return;
@@ -51,21 +53,21 @@ class Resistances
 		for (key in Type.allEnums(DamageTypes))
 			resistanceMap[key] += resistanceSets[sourceID][key];
 	}
-	public function remove(sourceID:Int)
+	public function remove(sourceID:Int) //remove set of bonuses
 	{
 		for (key in Type.allEnums(DamageTypes))
 			resistanceMap[key] -= resistanceSets[sourceID][key];
 		resistanceSets.remove(sourceID);
 	}
-	public function getMap():Map<DamageTypes,Int>
+	public function getMap():Map<DamageTypes,Int> //get the map of damage resistances
 	{
 		return resistanceMap;
 	}
-	public function get(key:DamageTypes):Int
+	public function get(key:DamageTypes):Int //get a specific value by key
 	{
 		return resistanceMap[key];
 	}
-	public function retMultiply(multiplyer:Float):Resistances
+	public function retMultiply(multiplyer:Float):Resistances //return a copy of this where each value is multiplied by multiplyer
 	{
 		var c:Resistances = this.copy();
 		for (key in Type.allEnums(DamageTypes))
@@ -74,14 +76,14 @@ class Resistances
 		}
 		return c;
 	}
-	public function copy():Resistances
+	public function copy():Resistances //return a copy of this
 	{
 		var c:Resistances = new Resistances();
 		for (key in Type.allEnums(DamageTypes))
 			c.setDefault(key, resistanceMap[key]);
 		return c;
 	}
-	public function takesDamage(types:Array<DamageTypes>, value:Float, ?cardType:Null<CardType> = null, ?source:Null<Character> = null):Float
+	public function takesDamage(types:Array<DamageTypes>, value:Float, ?cardType:Null<CardType> = null, ?source:Null<Character> = null):Float //called when a character is dealt damage
 	{
 		//trace(types);
 		for (type in types){

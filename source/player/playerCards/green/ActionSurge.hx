@@ -7,7 +7,6 @@ import character.Character;
 import player.PlayerCharacter;
 import utilities.event.Event;
 import player.Player;
-import character.resources.Health;
 import character.resources.Resources;
 import character.resources.ResourceTypes;
 import character.damage.DamageTypes;
@@ -29,7 +28,7 @@ class ActionSurge extends PlayerCard
 		cardType.positiveEffect(true);
 		cost = new Resources([0, 2, 0]);
 		windupTime = 0.0;
-		chargeTime = 0.1;
+		chargeTime = 0.0;
 	}
 	override public function play()
 	{	
@@ -38,11 +37,11 @@ class ActionSurge extends PlayerCard
 	}
 	override public function resolve()
 	{
+		super.resolve();
+		
 		for (card in owner.cardsInHand()){
 			card.charge = chargeTime;
 			card.isCharged = true;
 		}
-		
-		super.resolve();
 	}
 }
