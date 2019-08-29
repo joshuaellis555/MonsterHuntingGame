@@ -1,22 +1,9 @@
 package player.playerCharacterClass;
 
-import player.playerCards.blue.FireBolt;
-import player.playerCards.green.ThrowingKnife;
-import player.playerCards.red.Attack;
-import player.playerCards.red.Charge;
-import player.playerCards.red.CounterAttack;
-import player.playerCards.red.GuardBreaker;
-import player.playerCards.red.HeadFirst;
-import player.playerCards.red.Parry;
-import player.playerCards.red.QuickAttack;
-import player.playerCards.red.StrongAttack;
-import player.playerCards.redGreen.PoisonKnife;
-import player.playerCards.redYellow.FallBack;
-import player.playerCards.yellow.Guard;
-import player.playerCards.yellow.Rest;
 import library.Characters;
 import player.Player;
 import player.PlayerCharacter;
+import player.playerCards.Attack;
 
 /**
  * ...
@@ -41,7 +28,17 @@ class Fighter extends PlayerCharacter
 		
 		updateStats();
 		
-		//*
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		addCard(new Attack(this));
+		/*
 		addCard(new Attack(this));
 		addCard(new Guard(this));
 		addCard(new Rest(this));

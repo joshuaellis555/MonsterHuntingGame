@@ -72,12 +72,12 @@ class PlayState extends StatePlus
 		var t3:Team = new Team();
 		
 		//players recieve controlers in the order the players are created
+		var p1:Player = new Player(this, FlxColor.RED, new Controller(this));
 		var p3:Player = new Player(this,FlxColor.YELLOW, new Controller(this));
 		var p2:Player = new Player(this,FlxColor.GREEN, new Controller(this));
-		var p1:Player = new Player(this, FlxColor.RED, new Controller(this));
 		var p4:Player = new Player(this, FlxColor.BLUE, new Controller(this));
 		
-		///*
+		/*
 		p4.setMenu(new BattleMenu(p4,4));
 		var char4:Wizard = new Wizard(Std.int(p4.menu.menuImage.x+240-48), 400, p4);
 		char4.setTeam(t1);
@@ -87,11 +87,13 @@ class PlayState extends StatePlus
 		char3.setTeam(t1);
 		//*/
 		
+		///*
 		p1.setMenu(new BattleMenu(p1,2));
 		var char1:Fighter = new Fighter(Std.int(p1.menu.menuImage.x + 240 - 48), 400, p1);
 		char1.setTeam(t1);
+		//*/
 		
-		///*
+		/*
 		p2.setMenu(new BattleMenu(p2,1));
 		var char2:Ranger = new Ranger(Std.int(p2.menu.menuImage.x+240-48), 400, p2);
 		char2.setTeam(t1);
@@ -106,7 +108,7 @@ class PlayState extends StatePlus
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		///*
+		/*
 		//creates another set of enemies when the first dies
 		if (rg.dead() && summonedNext == false){
 			var dp:DarkPair = new DarkPair(this);

@@ -133,10 +133,10 @@ class StatusEffects extends BasicPlus
 			
 		/*
 		if (statusMap[StatusTypes.rage] > 0.0){
-			statsMods.setDefault(StatsEnum.bonusDmg, 0.5);
+			statsMods.setDefault(StatsEnum.meleeDmg, 0.5);
 			statsMods.setDefault(StatsEnum.dmgResistance, -0.5);
 		}else{
-			statsMods.setDefault(StatsEnum.bonusDmg, 0);
+			statsMods.setDefault(StatsEnum.meleeDmg, 0);
 			statsMods.setDefault(StatsEnum.dmgResistance, 0);
 		}
 		//*/
@@ -174,27 +174,27 @@ class StatusEffects extends BasicPlus
 		
 		for (type in types){
 			if (statusMap[StatusTypes.wet] > 0.0){
-				if (type == DamageTypes.fire){
+				if (type == DamageTypes.fire){ //wet reduces fire damage but then wet is removed
 					statusMap[StatusTypes.wet] = 0.1;
 					value /= 1 + 1 / types.length;
 				}
-				if (type == DamageTypes.lightning) value *= 1 + 1 / types.length;	
+				if (type == DamageTypes.lightning) value *= 1 + 1 / types.length; //wet increases lightning damage
 			}
 			if (statusMap[StatusTypes.cold] > 0.0){
-				if (type == DamageTypes.fire){
+				if (type == DamageTypes.fire){ //cold reduces fire damage but then cold is removed
 					statusMap[StatusTypes.cold] = 0.1;
 					value /= 1 + 1 / types.length;
 				}
-				if (type == DamageTypes.cold) value *= 1 + 1 / types.length;	
+				if (type == DamageTypes.cold) value *= 1 + 1 / types.length; //cold increases cold damage
 			}
 			if (statusMap[StatusTypes.hot] > 0.0){
-				if (type == DamageTypes.cold){
+				if (type == DamageTypes.cold){ //hot reduces cold damage but then hot is removed
 					statusMap[StatusTypes.hot] = 0.1;
 					value /= 1 + 1 / types.length;
 				}
-				if (type == DamageTypes.fire) value *= 1 + 1 / types.length;	
+				if (type == DamageTypes.fire) value *= 1 + 1 / types.length; //hot increases fire damage
 			}
-			if (statusMap[StatusTypes.rage] > 0.0){
+			if (statusMap[StatusTypes.rage] > 0.0){ //rage reduces physical damage but increases psychic damage
 				if (type == DamageTypes.physical)
 					value /= 1 + 0.5 / types.length;
 				if (type == DamageTypes.psychic)

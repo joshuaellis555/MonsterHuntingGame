@@ -1,6 +1,7 @@
 package monsters;
 
 import card.Card;
+import card.CardState;
 import character.statusEffects.StatusTypes;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
@@ -21,7 +22,7 @@ class MonsterCharacter extends Character
 {
 	public var target:Null<Character> = null;
 	
-	public var defaultAction:MonsterCard;
+	public var defaultAction:Null<MonsterCard> = null;
 	
 	public var delayCurrent:Float = 0.0;
 	public var delayTime:Float;
@@ -45,21 +46,32 @@ class MonsterCharacter extends Character
 		highlight.camera = Library.cameras.subCam.flxCam();
 	}
 	
-	private function chooseAction():Card
+	override public function chooseTarget(card:Card)
+	{
+		card.target = target;
+	}
+	private function chooseAction():Null<Card>
 	{
 		var choices:Array<Int> = [for (i in 0...activeCards.length) Std.random(activeCards.length)];
 		for (i in choices){
 			if (resources.check(activeCards.knownCards[i].cost)){
-					target = cast(activeCards.knownCards[i], MonsterCard).getTarget();
-					if (target != null)
-						return activeCards.knownCards[i];
+				var targets:Array<Character> = activeCards.knownCards[i].getTargets()[0];
+				if (targets.length > 0){
+					target = targets[Std.random(targets.length)];
+					return activeCards.knownCards[i];
+				}
 			}
 				
 		}
-		target = defaultAction.getTarget();
-		discard.push(activeCards.knownCards[choices[0]]);
-		activeCards.knownCards.remove(activeCards.knownCards[choices[0]]);
-		activeCards.push(discard.pop());
+		if (defaultAction!=null){
+			var targets:Array<Character> = defaultAction.getTargets()[0];
+			if (targets.length > 0){
+				target = targets[Std.random(targets.length)];
+			}
+			discard.push(activeCards.knownCards[choices[0]]);
+			activeCards.knownCards.remove(activeCards.knownCards[choices[0]]);
+			activeCards.push(discard.pop());
+		}
 		return defaultAction;
 	}
 	
@@ -73,7 +85,6 @@ class MonsterCharacter extends Character
 		target = null;
 		onDeckCard = null;
 		delayCurrent = 0.0;
-		card.resetCard();
 		delayTime = delayBaseTime + Std.random(Std.int(delayRandomExtraTime * 10) + 1) / 10;
 	}
 	
@@ -98,17 +109,14 @@ class MonsterCharacter extends Character
 		if (delayCurrent >= delayTime){
 			if (onDeckCard == null){
 				onDeckCard = chooseAction();
-				//trace('chose',onDeckCard.name);
-				onDeckCard.enabled = true;
 			}
 			if (target != null && onDeckCard != null){
-				if (!onDeckCard.isResolving && onDeckCard.isCharged){
-					//trace('play',onDeckCard.name);
+				if (onDeckCard.cardState == CardState.Charged){
 					onDeckCard.play();
 				}
 			}
 		}
-		if (target == null || (onDeckCard == null && windupCard == null && resolvingCard == null)){
+		if (target == null || onDeckCard == null){
 			highlight.visible = false;
 		}else{
 			highlight.visible = true;

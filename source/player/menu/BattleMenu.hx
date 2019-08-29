@@ -5,7 +5,7 @@ import utilities.camera.Camera;
 import flixel.math.FlxRect;
 import library.Cameras;
 import card.CardFamily;
-import player.playerCards.unplayable.Redraw;
+import player.playerCards.Redraw;
 import character.statusEffects.StatusTypes;
 import utilities.controller.Controller;
 import player.playerCards.PlayerCard;
@@ -120,6 +120,8 @@ class BattleMenu extends SpritePlus
 	{
 		selection.next();
 		owner.setFocus(selection.getTarget());
+		
+		trace('NEXT');
 	}
 	public function previous()
 	{
@@ -142,7 +144,7 @@ class BattleMenu extends SpritePlus
 	public function discard()
 	{
 		trace('menu discard');
-		buttons[owner.selection.getIndex()].card.discard();
+		buttons[owner.selection.getIndex()].card.finish();
 	}
 	
 	public function updateSelection()

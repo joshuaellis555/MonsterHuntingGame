@@ -41,23 +41,34 @@ class Resistances
 	}
 	public function setDefault(type:DamageTypes, value:Int) //change default value
 	{
-		//trace('setDefault');
 		resistanceMap[type] += value - defaultMap[type];
 		defaultMap[type] = value;
 	}
 	public function add(sourceID:Int, resistances:Resistances) //add full set of resistances from external source
 	{
-		//trace('add',sourceID);
 		if (resistanceSets.exists(sourceID)) return;
+		
 		resistanceSets[sourceID] = resistances.getMap();
 		for (key in Type.allEnums(DamageTypes))
 			resistanceMap[key] += resistanceSets[sourceID][key];
 	}
-	public function remove(sourceID:Int) //remove set of bonuses
+	public function remove(sourceID:Int) //remove set of resistances
 	{
+		if (!resistanceSets.exists(sourceID)) return;
+		
 		for (key in Type.allEnums(DamageTypes))
 			resistanceMap[key] -= resistanceSets[sourceID][key];
 		resistanceSets.remove(sourceID);
+	}
+	public function update(sourceID:Int, resistances:Resistances) //update a previously added set of resistances 
+	{
+		if (!resistanceSets.exists(sourceID)) return;
+		
+		for (key in Type.allEnums(DamageTypes)){
+			resistanceMap[key] -= resistanceSets[sourceID][key];
+			resistanceMap[key] += resistances.get(key);
+		}
+		resistanceSets[sourceID] = resistances.getMap();
 	}
 	public function getMap():Map<DamageTypes,Int> //get the map of damage resistances
 	{

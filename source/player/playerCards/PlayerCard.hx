@@ -16,119 +16,22 @@ import character.damage.DamageTypes;
 class PlayerCard extends Card 
 {
 	private var player:Player;
-	private var targets:Array<Array<Character>> = [];
-	public function new(owner:PlayerCharacter, ?elements:Null<Array<DamageTypes>>=null, ?normalCard=true) 
+	
+	public function new(owner:PlayerCharacter,  targets:Array<Character->Bool->Array<Character>>)
 	{
-		super(owner, elements, normalCard);
+		super(owner, targets);
 		player = owner.owner;
 	}
-	
-	override public function play()
-	{
-		if (targets.length == 0)
-			return;
-		
-		targets = [for (set in targets) [for (t in set) if (t.canBeTargetedBy(this)) t]];
-		var total:Int = 0;
-		for (t in targets)
-			total += t.length;
-		if (total == 0) return;
-		
-		
-		super.play();
-		if (isCharged){
-			if (owner.resources.check(cost))
-				player.selection.addSubSelection(new Selection(cast targets, nextSlice, previousSlice, next, previous, ok, esc));
-		}
-	}
-	public function next()
-	{
-		player.selection.next();
-		if (player.selection.getTarget().alive == false){
-			if (!player.selection.removeCurrent()){
-				fail();
-				return;
-			}
-			player.selection.previous();
-			next();
-		}else{
-			player.setFocus(player.selection.getTarget());
-		}
-	}
-	public function previous()
-	{
-		player.selection.previous();
-		if (player.selection.getTarget().alive == false){
-			if (!player.selection.removeCurrent()){
-				fail();
-				return;
-			}
-			previous();
-		}else{
-			player.setFocus(player.selection.getTarget());
-		}
-	}
-	public function nextSlice()
-	{
-		//trace('nextSlice');
-		player.selection.nextSlice();
-		while (player.selection.getTarget().alive == false){
-			if (!player.selection.removeCurrent()){
-				fail();
-				return;
-			}
-		}
-		player.setFocus(player.selection.getTarget());
-	}
-	public function previousSlice()
-	{
-		//trace('previousSlice');
-		player.selection.previousSlice();
-		while (player.selection.getTarget().alive == false){
-			if (!player.selection.removeCurrent()){
-				fail();
-				return;
-			}
-		}
-		player.setFocus(player.selection.getTarget());
-	}
-	public function ok()
-	{
-		if (!beginResolution()) return;
-	}
-	public function esc()
+
+	override public function fail()
 	{
 		player.selection.popSubSelection();
 		player.resetFocus();
-	}
-	public function info(button:Button){}
-	public function fail()
-	{
-		player.selection.popSubSelection();
-		player.resetFocus();
-	}
-	override public function resolve()
-	{
-		player.character.resetCardTimers(family);
-		super.resolve();
 	}
 	override public function finish()
 	{
 		super.finish();
 		player.selection.popSubSelection();
 		player.cardFinished();
-	}
-	override public function resetCard()
-	{
-		super.resetCard();
-		targets = [];
-	}
-	override public function beginResolution():Bool
-	{
-		target = cast player.selection.getTarget();
-		target = target.targetThis(this); //check for blessing, reffect, etc...
-		//try to target a character
-		
-		return super.beginResolution();
 	}
 }

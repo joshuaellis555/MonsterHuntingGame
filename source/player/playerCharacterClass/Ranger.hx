@@ -1,20 +1,5 @@
 package player.playerCharacterClass;
 
-import player.playerCards.green.ActionSurge;
-import player.playerCards.blueYellow.Heal;
-import player.playerCards.green.ChaseDown;
-import player.playerCards.green.Finisher;
-import player.playerCards.green.PoisonDart;
-import player.playerCards.green.QuickAttack;
-import player.playerCards.green.ThrowingKnife;
-import player.playerCards.greenYellow.TakeCover;
-import player.playerCards.red.QuickAttack;
-import player.playerCards.green.TwinSlash;
-import player.playerCards.red.Attack;
-import player.playerCards.redGreen.PoisonKnife;
-import player.playerCards.yellow.Guard;
-import player.playerCards.yellow.LightGuard;
-import player.playerCards.yellow.Rest;
 import library.Characters;
 import player.Player;
 import player.PlayerCharacter;
@@ -42,6 +27,7 @@ class Ranger extends PlayerCharacter
 		
 		updateStats();
 		
+		/*
 		addCard(new PoisonKnife(this));
 		addCard(new LightGuard(this));
 		addCard(new Attack(this));
@@ -63,5 +49,6 @@ class Ranger extends PlayerCharacter
 		addCard(new LightGuard(this));
 		addCard(new ChaseDown(this));
 		addCard(new ThrowingKnife(this));
+		//*/
 	}
 }

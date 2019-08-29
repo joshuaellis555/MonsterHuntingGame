@@ -264,7 +264,7 @@ class Effects extends BasicPlus
 			if (source.cardType.positiveEffect() == false && source.cardType.magic() == true){
 				source.fizzle();
 				blessing.pop();
-				blessingAnimation.play(owner, source.windupTime);
+				blessingAnimation.play(owner);
 			}
 		}
 		
@@ -272,7 +272,7 @@ class Effects extends BasicPlus
 			if (source.cardType.positiveEffect() == true && source.cardType.magic() == true){
 				source.fizzle();
 				curse.pop();
-				curseAnimation.play(owner, source.windupTime);
+				curseAnimation.play(owner);
 			}
 		}
 		

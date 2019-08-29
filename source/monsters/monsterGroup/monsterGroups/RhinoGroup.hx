@@ -19,8 +19,8 @@ class RhinoGroup extends MonsterGroup
 		super(source);
 		
 		addMonster(new Rhino(this), 2);
-		addMonster(new SuperRhino(this), 3);
-		addMonster(new Rhino(this), 4);
+		//addMonster(new SuperRhino(this), 3);
+		//addMonster(new Rhino(this), 4);
 	}
 	
 }

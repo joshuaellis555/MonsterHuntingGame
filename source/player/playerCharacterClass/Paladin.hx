@@ -1,20 +1,5 @@
 package player.playerCharacterClass;
 
-import player.playerCards.blue.GenerateMana;
-import player.playerCards.blueYellow.Barrier;
-import player.playerCards.blueYellow.Heal;
-import player.playerCards.red.Attack;
-import player.playerCards.red.GuardBreaker;
-import player.playerCards.red.Parry;
-import player.playerCards.red.StrongAttack;
-import player.playerCards.white.GreaterBlessing;
-import player.playerCards.white.GreaterHeal;
-import player.playerCards.white.Holy;
-import player.playerCards.white.Revive;
-import player.playerCards.yellow.Defend;
-import player.playerCards.yellow.Guard;
-import player.playerCards.yellow.HeavyGuard;
-import player.playerCards.yellow.Rest;
 import library.Characters;
 import player.Player;
 import player.PlayerCharacter;
@@ -42,6 +27,7 @@ class Paladin extends PlayerCharacter
 		
 		updateStats();
 		
+		/*
 		addCard(new Attack(this));
 		addCard(new Guard(this));
 		addCard(new Defend(this));
@@ -63,7 +49,7 @@ class Paladin extends PlayerCharacter
 		addCard(new Revive(this));
 		
 		addCard(new Barrier(this));
-		
+		//*/
 		
 		
 	}

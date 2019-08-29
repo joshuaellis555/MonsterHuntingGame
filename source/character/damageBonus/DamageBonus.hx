@@ -55,9 +55,21 @@ class DamageBonus
 	}
 	public function remove(sourceID:Int) //remove set of bonuses
 	{
+		if (!bonusSets.exists(sourceID)) return;
+		
 		for (key in Type.allEnums(DamageTypes))
 			bonusMap[key] -= bonusSets[sourceID][key];
 		bonusSets.remove(sourceID);
+	}
+	public function update(sourceID:Int, bonuses:DamageBonus) //update a previously added set of bonuses 
+	{
+		if (!bonusSets.exists(sourceID)) return;
+		
+		for (key in Type.allEnums(DamageTypes)){
+			bonusMap[key] -= bonusSets[sourceID][key];
+			bonusMap[key] += bonuses.get(key);
+		}
+		bonusSets[sourceID] = bonuses.getMap();
 	}
 	public function getMap():Map<DamageTypes,Int> //get the map of damage bonuses
 	{

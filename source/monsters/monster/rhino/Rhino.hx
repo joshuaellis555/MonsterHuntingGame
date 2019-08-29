@@ -3,12 +3,7 @@ package monsters.monster.rhino;
 import library.Characters;
 import monsters.MonsterCharacter;
 import character.damage.DamageTypes;
-import monsters.monster.rhino.cards.RhinoAttack;
-import monsters.monster.rhino.cards.RhinoBackUp;
-import monsters.monster.rhino.cards.RhinoBash;
-import monsters.monster.rhino.cards.RhinoCharge;
-import monsters.monster.rhino.cards.RhinoRest;
-import monsters.monster.rhino.cards.RhinoGuard;
+import player.playerCards.Attack;
 import utilities.plusInterface.PlusInterface;
 
 /**
@@ -41,9 +36,9 @@ class Rhino extends MonsterCharacter
 		
 		updateStats();
 		
-		defaultAction = new RhinoRest(this);
+		//defaultAction = new RhinoRest(this);
 		
-		///*
+		/*
 		addCard(new RhinoGuard(this));
 		addCard(new RhinoCharge(this));
 		addCard(new RhinoAttack(this));

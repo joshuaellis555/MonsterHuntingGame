@@ -6,14 +6,14 @@ package character.stats;
 
 enum StatsEnum
 {
-	bonusDmg;
+	meleeDmg;
 	speed;
 	maxHealth;
 	dmgResistance;
 	staminaRegen;
-	stamina;
+	maxStamina;
 	manaRegen;
-	mana;
+	maxMana;
 	magicDmg;
 	handSize;
 	drawSpeed;

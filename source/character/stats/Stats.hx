@@ -12,25 +12,27 @@ import character.stats.StatsEnum;
  */
 class Stats 
 {
-	private var defaultMap:Map<StatsEnum,Float>;
-	private var statsMap:Map<StatsEnum,Float>;
-	private var statsSets:Map<Int,Map<StatsEnum,Float>>;
+	private var statsMap:Map<StatsEnum,Float>; //Sum of statsSets and defaultMap
+	
+	private var statsSets:Map<Int,Map<StatsEnum,Float>>; //Added values from other sources
+	
+	private var defaultMap:Map<StatsEnum,Float>; //values inherent to this istance. Only the character should change these
+	
 	private var timers:Null<Map<StatsEnum,Float>>=null;
 	private var rates:Map<StatsEnum,Float>;
 	
 	public function new(?stats:Null<Array<Float>>=null)
 	{
-		//trace("new");
 		defaultMap = new Map<StatsEnum, Float>();
 		statsMap = new Map<StatsEnum, Float>();
 		statsSets = new Map<Int,Map<StatsEnum,Float>>();
-		if (stats==null){
+		
+		if (stats==null){ //load default values of 3 if no array supplied
 			for (key in Type.allEnums(StatsEnum)){
 				statsMap[key] = 0.0;
 				defaultMap[key] = 0.0;
 			}
-		}else{
-			//trace("else");
+		}else{ //else load values from array
 			var i:Int = 0;
 			for (key in Type.allEnums(StatsEnum)){
 				if  (i < stats.length){
@@ -44,13 +46,12 @@ class Stats
 			}
 		}
 	}
-	public function setDefault(type:StatsEnum, value:Float)
+	public function setDefault(type:StatsEnum, value:Float) //modify the default value
 	{
-		//trace('setDefault');
-		statsMap[type] += value - defaultMap[type];
+		statsMap[type] += value - defaultMap[type]; //update statsMap with the difference
 		defaultMap[type] = value;
 	}
-	public function add(sourceID:Int, stats:Stats)
+	public function add(sourceID:Int, stats:Stats) //add a set of stats to this
 	{
 		//trace("add");
 		if (statsSets.exists(sourceID)) return;
@@ -58,7 +59,7 @@ class Stats
 		for (key in Type.allEnums(StatsEnum))
 			statsMap[key] += statsSets[sourceID][key];
 	}
-	public function update(sourceID:Int, stats:Stats)
+	public function update(sourceID:Int, stats:Stats) //update a previously added set of stats 
 	{
 		if (!statsSets.exists(sourceID)) return;
 		
@@ -68,23 +69,25 @@ class Stats
 		}
 		statsSets[sourceID] = stats.getMap();
 	}
-	public function remove(sourceID:Int)
+	public function remove(sourceID:Int) //remove a stats set added from outside source
 	{
+		if (!statsSets.exists(sourceID)) return;
+		
 		for (key in Type.allEnums(StatsEnum))
 			statsMap[key] -= statsSets[sourceID][key];
 		statsSets.remove(sourceID);
 	}
-	public function getMap():Map<StatsEnum,Float>
+	public function getMap():Map<StatsEnum,Float> //return statsMap
 	{
 		return statsMap;
 	}
-	public function get(type:StatsEnum):Float
+	public function get(type:StatsEnum):Float //get specific stats value
 	{
 		return statsMap[type];
 	}
 	public function takesDamage(types:Array<DamageTypes>, value:Float, ?cardType:Null<CardType> = null, ?source:Null<Character> = null):Float
 	{
-		//trace(value);
+		// dmgResistance reduces all damage taken
 		if (statsMap[StatsEnum.dmgResistance] > 0){
 			value /= (1 + statsMap[StatsEnum.dmgResistance]);
 		}else if (statsMap[StatsEnum.dmgResistance] < 0){
@@ -94,14 +97,15 @@ class Stats
 	}
 	public function doesDamage(types:Array<DamageTypes>, value:Float, ?cardType:Null<CardType> = null, ?source:Null<Character> = null):Float
 	{
-		//trace(value);
+		//meleeDmg increases damage for all melee attacks
 		if (cardType.melee()){
-			if (statsMap[StatsEnum.bonusDmg] > 0){
-				value *= (1 + statsMap[StatsEnum.bonusDmg]);
-			}else if (statsMap[StatsEnum.bonusDmg] < 0){
-				value /= (1 - statsMap[StatsEnum.bonusDmg]);
+			if (statsMap[StatsEnum.meleeDmg] > 0){
+				value *= (1 + statsMap[StatsEnum.meleeDmg]);
+			}else if (statsMap[StatsEnum.meleeDmg] < 0){
+				value /= (1 - statsMap[StatsEnum.meleeDmg]);
 			}
 		}
+		// magicDmg increases damage for all spell attacks
 		if (cardType.spell()){
 			if (statsMap[StatsEnum.magicDmg] > 0){
 				value *= (1 + statsMap[StatsEnum.magicDmg]);

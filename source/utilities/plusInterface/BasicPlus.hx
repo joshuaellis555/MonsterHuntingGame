@@ -21,8 +21,11 @@ class BasicPlus extends FlxBasic implements PlusInterface
 	
 	public function new(parent:PlusInterface)
 	{
+		//trace("plusType");
 		plusType = PlusEnum.BasicPlus;
+		//trace("addItem");
 		parent.addItem(this);
+		//trace("super");
 		super();
 	}
 	public function type():PlusEnum
@@ -31,11 +34,13 @@ class BasicPlus extends FlxBasic implements PlusInterface
 	}
 	public function addItem(item:PlusInterface):Void
 	{
+		//trace('additem', item, item.tracker,trackedItems.length);
 		if (item.tracker != null)
 			item.tracker.removeItem(item);
 		item.setTracker(this);
 		trackedItems.push(item);
 		FlxG.state.add(cast item);
+		//trace('additem', item, item.tracker,trackedItems.length);
 	}
 	public function setTracker(tracker:Null<PlusInterface> = null):Void
 	{
@@ -43,8 +48,10 @@ class BasicPlus extends FlxBasic implements PlusInterface
 	}
 	public function removeItem(item:PlusInterface):Bool
 	{
+		//trace('removeItem', item, item.tracker,trackedItems.length);
 		item.setTracker(null);
 		return trackedItems.remove(item);
+		//trace('removeItem', item, item.tracker,trackedItems.length);
 	}
 	
 	public function plusUpdate(elapsed:Float){}
@@ -63,6 +70,7 @@ class BasicPlus extends FlxBasic implements PlusInterface
 	
 	override public function destroy():Void
 	{
+		//trace("destroy",trackedItems.length);
 		while (trackedItems.length > 0) trackedItems[0].destroy();
 		if (tracker != null) tracker.removeItem(this);
 		super.destroy();

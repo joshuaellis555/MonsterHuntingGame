@@ -3,11 +3,6 @@ package monsters.monster.gasBag;
 import library.Characters;
 import monsters.MonsterCharacter;
 import character.damage.DamageTypes;
-import monsters.monster.gasBag.cards.GasBagFireBolt;
-import monsters.monster.gasBag.cards.GasBagFloatAway;
-import monsters.monster.gasBag.cards.GasBagNoxiousFumes;
-import monsters.monster.gasBag.cards.GasBagPoisonCloud;
-import monsters.monster.gasBag.cards.GasBagScratch;
 import utilities.plusInterface.PlusInterface;
 
 
@@ -41,12 +36,14 @@ class GasBag extends MonsterCharacter
 		
 		updateStats();
 		
+		/*
 		defaultAction = new GasBagFloatAway(this);
 		
 		addCard(new GasBagPoisonCloud(this));
 		addCard(new GasBagScratch(this));
 		addCard(new GasBagNoxiousFumes(this));
 		addCard(new GasBagFireBolt(this));
+		//*/
 	}
 	
 }

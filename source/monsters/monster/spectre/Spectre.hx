@@ -1,10 +1,5 @@
 package monsters.monster.spectre;
 
-import monsters.monster.spectre.cards.SpectreCurse;
-import monsters.monster.spectre.cards.SpectreDarkness;
-import monsters.monster.spectre.cards.SpectreGenerateMana;
-import monsters.monster.spectre.cards.SpectreMagicBolt;
-import monsters.monster.spectre.cards.SpectreBarrier;
 import library.Characters;
 import monsters.MonsterCharacter;
 import character.damage.DamageTypes;
@@ -42,6 +37,7 @@ class Spectre extends MonsterCharacter
 		
 		updateStats();
 		
+		/*
 		defaultAction = new SpectreGenerateMana(this);
 		
 		addCard(new SpectreMagicBolt(this));
@@ -51,6 +47,7 @@ class Spectre extends MonsterCharacter
 		addCard(new SpectreDarkness(this));
 		addCard(new SpectreMagicBolt(this));
 		addCard(new SpectreCurse(this));
+		//*/
 	}
 	
 }

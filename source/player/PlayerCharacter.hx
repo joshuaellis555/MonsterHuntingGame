@@ -1,16 +1,19 @@
 package player;
 
+import card.CardState;
+import utilities.button.Button;
 import card.Card;
 import card.CardFamily;
 import player.playerCards.PlayerCard;
+import player.playerCards.Redraw;
 import character.Character;
 import character.resources.Resources;
 import flixel.util.FlxColor;
 import player.Player;
-import player.playerCards.unplayable.Redraw;
 import character.damage.DamageTypes;
 import library.Library;
 import character.statusEffects.StatusTypes;
+import utilities.selection.Selection;
 
 /**
  * ...
@@ -41,7 +44,9 @@ class PlayerCharacter extends Character
 	{
 		if (activeCards.knownCards.remove(card)){
 			discard.push(card);
-			activeCards.push(new Redraw(this));
+			var redraw:Redraw = new Redraw(this);
+			activeCards.push(redraw);
+			//trace('redraw index',activeCards.knownCards.indexOf(redraw));
 		}else{
 			trace('CARD NOT FOUND!!!!!!!!!', card.name);
 		}
@@ -57,9 +62,9 @@ class PlayerCharacter extends Character
 		var i:Int = activeCards.knownCards.indexOf(redraw);
 		if (i >= 0){
 			activeCards.knownCards[i] = discard.pop();
-			trace(i, owner.menu.buttons.length);
+			//trace(i, owner.menu.buttons.length);
 			owner.menu.buttons[i].card = cast activeCards.knownCards[i];
-			activeCards.knownCards[i].enabled = true;
+			activeCards.knownCards[i].cardState = CardState.Charging;
 		}else{
 			trace("REDRAW NOT FOUND!!!!!!!");
 		}
@@ -70,9 +75,87 @@ class PlayerCharacter extends Character
 		super.addCard(card);
 		if (activeCards.length <= handSize()){
 			owner.menu.buttons[activeCards.length - 1].card = cast activeCards.knownCards[activeCards.length - 1];
-			activeCards.knownCards[activeCards.length - 1].enabled = true;
+			activeCards.knownCards[activeCards.length - 1].cardState = CardState.Charging;
 		}
 	}
+	
+	override public function chooseTarget(card:Card)
+	{
+		trace("chooseTarget");
+		var targets:Array<Array<Character>> = onDeckCard.getTargets();
+		owner.selection.addSubSelection(new Selection(cast targets, nextSlice, previousSlice, next, previous, ok, esc));
+	}
+	public function next()
+	{
+		if (onDeckCard == null) return;
+		owner.selection.next();
+		if (owner.selection.getTarget().alive == false){
+			if (!owner.selection.removeCurrent()){
+				onDeckCard.fail();
+				return;
+			}
+			owner.selection.previous();
+			next();
+		}else{
+			owner.setFocus(owner.selection.getTarget());
+		}
+	}
+	public function previous()
+	{
+		if (onDeckCard == null) return;
+		owner.selection.previous();
+		if (owner.selection.getTarget().alive == false){
+			if (!owner.selection.removeCurrent()){
+				onDeckCard.fail();
+				return;
+			}
+			previous();
+		}else{
+			owner.setFocus(owner.selection.getTarget());
+		}
+	}
+	public function nextSlice()
+	{
+		if (onDeckCard == null) return;
+		//trace('nextSlice');
+		owner.selection.nextSlice();
+		while (owner.selection.getTarget().alive == false){
+			if (!owner.selection.removeCurrent()){
+				onDeckCard.fail();
+				return;
+			}
+		}
+		owner.setFocus(owner.selection.getTarget());
+	}
+	public function previousSlice()
+	{
+		if (onDeckCard == null) return;
+		//trace('previousSlice');
+		owner.selection.previousSlice();
+		while (owner.selection.getTarget().alive == false){
+			if (!owner.selection.removeCurrent()){
+				onDeckCard.fail();
+				return;
+			}
+		}
+		owner.setFocus(owner.selection.getTarget());
+	}
+	public function ok()
+	{
+		trace("onDeckCard",onDeckCard);
+		if (onDeckCard != null){
+			onDeckCard.target = cast owner.selection.getTarget();
+			trace("onDeckCard.target",onDeckCard.target);
+		}
+	}
+	public function esc()
+	{
+		if (onDeckCard == null) return;
+		owner.resetFocus();
+		owner.selection.popSubSelection();
+	}
+	public function info(button:Button){}
+	
 	public function resetCardTimers(family:CardFamily)
 	{
 		for (b in owner.menu.buttons){
@@ -155,6 +238,7 @@ class PlayerCharacter extends Character
 	
 	override public function update(elapsed:Float)
 	{
+		//trace('update player');
 		if (this.alive){
 			if (statusEffects.get(StatusTypes.delayed) > 0){
 				owner.setUpdate(false);
@@ -168,8 +252,9 @@ class PlayerCharacter extends Character
 				for (i in 0...handSize()){
 					//trace("i",i);
 					if (i >= activeCards.length){
-						//trace("null");
+						//trace("new redraw");
 						var c:PlayerCard = new Redraw(this);
+						//trace('redraw done');
 						activeCards.push(c);
 						owner.menu.buttons[i].card = cast c;
 					}

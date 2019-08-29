@@ -3,13 +3,6 @@ package monsters.monster.superRhino;
 import library.Characters;
 import monsters.MonsterCharacter;
 import character.damage.DamageTypes;
-import monsters.monster.superRhino.cards.SuperRhinoAttack;
-import monsters.monster.superRhino.cards.SuperRhinoBackUp.RhinoBackUp;
-import monsters.monster.superRhino.cards.SuperRhinoBash;
-import monsters.monster.superRhino.cards.SuperRhinoCharge;
-import monsters.monster.superRhino.cards.SuperRhinoEarthquake;
-import monsters.monster.superRhino.cards.SuperRhinoRest;
-import monsters.monster.superRhino.cards.SuperRhinoGuard;
 import utilities.plusInterface.PlusInterface;
 
 /**
@@ -42,6 +35,7 @@ class SuperRhino extends MonsterCharacter
 		
 		updateStats();
 		
+		/*
 		defaultAction = new SuperRhinoRest(this);
 		
 		addCard(new SuperRhinoGuard(this));
@@ -54,6 +48,7 @@ class SuperRhino extends MonsterCharacter
 		addCard(new SuperRhinoEarthquake(this));
 		addCard(new SuperRhinoCharge(this));
 		addCard(new SuperRhinoGuard(this));
+		//*/
 	}
 	
 }

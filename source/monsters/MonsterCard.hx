@@ -17,34 +17,9 @@ class MonsterCard extends Card
 {
 	public var monster:MonsterCharacter;
 	
-	public var possibleTargetsFunct:Character->Bool->Array<Character>;
-	
-	public function new(owner:MonsterCharacter, ?elements:Null<Array<DamageTypes>>=null, ?normalCard=true) 
+	public function new(owner:MonsterCharacter, possibleTargetsFunct:Character->Bool->Array<Character>) 
 	{
-		super(owner, elements, normalCard);
+		super(owner,[possibleTargetsFunct]);
 		monster = owner;
-	}
-	public function getTarget():Null<Character>
-	{
-		var targets:Array<Character> = [for (t in possibleTargetsFunct(monster, true)) if (t.canBeTargetedBy(this)) t];
-		if (targets.length > 0)
-			return targets[Std.random(targets.length)];
-		else
-			return null;
-	}
-	override public function play()
-	{
-		super.play();
-		if (isCharged){
-			if (owner.resources.check(cost)){
-				trace('play');
-				target = monster.target;
-				owner.onDeckCard = null;
-				if (!beginResolution()){
-					trace('!beginResolution()');
-					owner.discardCard(this);
-				}
-			}
-		}
 	}
 }

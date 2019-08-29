@@ -1,6 +1,7 @@
 package player.menu;
 import utilities.button.Button;
 import card.Card;
+import card.CardState;
 import card.CardFamily;
 import player.playerCards.PlayerCard;
 import flixel.FlxCamera;
@@ -70,7 +71,7 @@ class MenuButton extends Button
 			}else{
 				fText.color = FlxColor.BLACK;
 			}
-			if (!card.isCharged || card.family == CardFamily.Unplayable){
+			if (card.cardState != CardState.Charged || card.family == CardFamily.Unplayable){
 				var c:FlxColor = color;
 				c.lightness *= .6;
 				color = c;

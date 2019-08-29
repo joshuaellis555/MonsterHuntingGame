@@ -1,23 +1,5 @@
 package player.playerCharacterClass;
 
-import player.playerCards.blue.Counterspell;
-import player.playerCards.blue.Earthquake;
-import player.playerCards.blue.FireBolt;
-import player.playerCards.blue.GenerateMana;
-import player.playerCards.blue.HydroBlast;
-import player.playerCards.blue.IceBlast;
-import player.playerCards.blue.Lightning;
-import player.playerCards.blue.MagicBolt;
-import player.playerCards.blue.PoisonCloud;
-import player.playerCards.blue.VineLash;
-import player.playerCards.blueYellow.Barrier;
-import player.playerCards.blueYellow.NaturesBlessing;
-import player.playerCards.green.ThrowingKnife;
-import player.playerCards.red.Attack;
-import player.playerCards.redBlue.SpellBlade;
-import player.playerCards.yellow.Guard;
-import player.playerCards.yellow.LightGuard;
-import player.playerCards.yellow.Run;
 import library.Characters;
 import player.Player;
 import player.PlayerCharacter;
@@ -46,6 +28,7 @@ class Wizard extends PlayerCharacter
 		
 		updateStats();
 		
+		/*
 		addCard(new MagicBolt(this));
 		addCard(new LightGuard(this));
 		addCard(new FireBolt(this));
@@ -67,5 +50,6 @@ class Wizard extends PlayerCharacter
 		addCard(new SpellBlade(this));
 		
 		addCard(new IceBlast(this));
+		//*/
 	}
 }
